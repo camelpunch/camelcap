@@ -7,14 +7,6 @@ role :db, domain, :primary => true
 
 set :scm, :git
 
-namespace :deploy do
-  desc 'Display the names of the servers for this task'
-  task :display_servers do
-    servers = roles[:web].servers.map { |server| server.host }.join(', ')
-    logger.trace "\nDeploying to #{servers}\n\n"
-  end
-end
-
 namespace :passenger do
   desc "Restart Application"
   task :restart do
@@ -29,4 +21,3 @@ namespace :deploy do
   end
 end
 
-before :deploy, "deploy:display_servers"
