@@ -12,6 +12,12 @@ role :db, domain, :primary => true
 
 set :scm, :git
 
+task :fix_setup_permissions do
+  run "#{sudo} chown ubuntu.ubuntu #{deploy_to} #{deploy_to}/*"
+end
+
+after "deploy:setup", "fix_setup_permissions"
+
 namespace :passenger do
   desc "Restart Application"
   task :restart do
