@@ -16,7 +16,17 @@ task :fix_setup_permissions do
   run "#{sudo} chown ubuntu.ubuntu #{deploy_to} #{deploy_to}/*"
 end
 
+task :touch_and_permit_log_files do
+  %w(production staging).each do |env|
+    log_path = "#{deploy_to}/shared/log/#{env}.log"
+    run "#{sudo} touch #{log_path}"
+    run "#{sudo} chown ubuntu.ubuntu #{log_path}"
+    run "#{sudo} chmod 0666 #{log_path}"
+  end
+end
+
 after "deploy:setup", "fix_setup_permissions"
+after "deploy", "touch_and_permit_log_files"
 
 namespace :passenger do
   desc "Restart Application"
