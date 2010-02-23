@@ -12,24 +12,28 @@ role :db, 'camelpunch.com', :primary => true
 
 set :scm, :git
 
-task :fix_setup_permissions do
-  run "#{sudo} chown ubuntu.ubuntu #{deploy_to} #{deploy_to}/*"
-end
-
-task :touch_and_permit_log_files do
-  %w(production staging).each do |env|
-    log_path = "#{deploy_to}/shared/log/#{env}.log"
-    run "#{sudo} touch #{log_path}"
-    run "#{sudo} chown ubuntu.ubuntu #{log_path}"
-    run "#{sudo} chmod 0666 #{log_path}"
-  end
-end
-
 task :build_gems do
   run "cd #{current_path} && rake gems:build RAILS_ENV=#{rails_env}"
 end
 
 namespace :deploy do
+  task :fix_setup_permissions do
+    run "#{sudo} chown ubuntu.ubuntu #{deploy_to} #{deploy_to}/*"
+  end
+
+  task :touch_and_permit_log_files do
+    %w(production staging).each do |env|
+      log_path = "#{deploy_to}/shared/log/#{env}.log"
+      run "#{sudo} touch #{log_path}"
+      run "#{sudo} chown ubuntu.ubuntu #{log_path}"
+      run "#{sudo} chmod 0666 #{log_path}"
+    end
+  end
+
+  task :copy_sites_available do
+    run "#{sudo} cp #{current_path}/config/apache/* /etc/apache2/sites-available/"
+  end
+
   task :start do ; end
   task :stop do ; end
   task :restart, :roles => :app, :except => { :no_release => true } do
@@ -37,6 +41,7 @@ namespace :deploy do
   end
 end
 
-after "deploy:setup", "fix_setup_permissions"
-after "deploy", "touch_and_permit_log_files"
+after "deploy:setup", "deploy:fix_setup_permissions"
+after "deploy", "deploy:symlink_sites_available"
+after "deploy", "deploy:touch_and_permit_log_files"
 
