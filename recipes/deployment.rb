@@ -42,3 +42,7 @@ namespace :deploy do
   end
 end
 
+after :deploy do
+  run "cd #{current_path} && rake gems:build RAILS_ENV=#{rails_env}"
+end
+
