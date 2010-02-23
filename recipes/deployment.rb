@@ -39,5 +39,4 @@ end
 
 after "deploy:setup", "fix_setup_permissions"
 after "deploy", "touch_and_permit_log_files"
-after :deploy, "build_gems"
 
