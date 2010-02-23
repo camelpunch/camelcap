@@ -25,24 +25,19 @@ task :touch_and_permit_log_files do
   end
 end
 
-after "deploy:setup", "fix_setup_permissions"
-after "deploy", "touch_and_permit_log_files"
-
-namespace :passenger do
-  desc "Restart Application"
-  task :restart do
-    run "touch #{current_path}/tmp/restart.txt"
-  end
+task :build_gems do
+  run "cd #{current_path} && rake gems:build RAILS_ENV=#{rails_env}"
 end
 
 namespace :deploy do
-  %w(start restart).each do |name|
-    task name, :roles => :app do
-      passenger.restart end
+  task :start do ; end
+  task :stop do ; end
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
 end
 
-after :deploy do
-  run "cd #{current_path} && rake gems:build RAILS_ENV=#{rails_env}"
-end
+after "deploy:setup", "fix_setup_permissions"
+after "deploy", "touch_and_permit_log_files"
+after :deploy, "build_gems"
 
