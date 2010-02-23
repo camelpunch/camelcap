@@ -1,6 +1,6 @@
 require 'capistrano/ext/multistage'
 set(:repository) { "git@github.com:camelpunch/#{application}.git" }
-set :deploy_to { "/websites/#{domain}" }
+set(:deploy_to) { "/websites/#{domain}" }
 set :default_stage, "production"
 set :user, "ubuntu"
 ssh_options[:keys] = ["#{ENV['HOME']}/.ssh/camelpunch.pem"]
