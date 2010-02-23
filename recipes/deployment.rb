@@ -42,6 +42,6 @@ namespace :deploy do
 end
 
 after "deploy:setup", "deploy:fix_setup_permissions"
-after "deploy", "deploy:symlink_sites_available"
+after "deploy", "deploy:copy_sites_available"
 after "deploy", "deploy:touch_and_permit_log_files"
 
