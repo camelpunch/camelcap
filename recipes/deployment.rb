@@ -17,6 +17,22 @@ task :build_gems do
 end
 
 namespace :deploy do
+  namespace :apache do
+    task :reload do
+      run "#{sudo} service apache2 reload"
+    end
+  end
+
+  namespace :web do
+    task :disable do
+      run "#{sudo} a2dissite #{domain}"
+    end
+
+    task :enable do
+      run "#{sudo} a2ensite #{domain}"
+    end
+  end
+
   task :fix_setup_permissions do
     run "#{sudo} chown ubuntu.ubuntu #{deploy_to} #{deploy_to}/*"
   end
@@ -40,6 +56,9 @@ namespace :deploy do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
 end
+
+after "deploy:web:enable", "deploy:apache:reload"
+after "deploy:web:disable", "deploy:apache:reload"
 
 after "deploy:setup", "deploy:fix_setup_permissions"
 after "deploy", "deploy:copy_sites_available"
