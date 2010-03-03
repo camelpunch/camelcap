@@ -11,7 +11,7 @@ role :db, 'camelpunch.com', :primary => true
 set :scm, :git
 
 task :build_gems do
-  run "cd #{current_path} && rake gems:build RAILS_ENV=#{rails_env}"
+  run "cd #{release_path} && rake gems:build RAILS_ENV=#{rails_env}"
 end
 
 namespace :deploy do
