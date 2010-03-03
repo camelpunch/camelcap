@@ -4,8 +4,6 @@ set(:deploy_to) { "/websites/#{domain}" }
 set :default_stage, "production"
 set :user, "ubuntu"
 ssh_options[:keys] = ["#{ENV['HOME']}/.ssh/camelpunch.pem"]
-default_environment['PATH'] = 
-  '/var/lib/gems/1.8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   
 server 'camelpunch.com', :app, :web
 role :db, 'camelpunch.com', :primary => true
