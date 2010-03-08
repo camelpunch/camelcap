@@ -38,6 +38,7 @@ namespace :deploy do
   task :touch_and_permit_log_files do
     %w(production staging).each do |env|
       log_path = "#{deploy_to}/shared/log/#{env}.log"
+      run "#{sudo} chown ubuntu.ubuntu #{deploy_to}/shared/log"
       run "#{sudo} touch #{log_path}"
       run "#{sudo} chown ubuntu.ubuntu #{log_path}"
       run "#{sudo} chmod 0666 #{log_path}"
