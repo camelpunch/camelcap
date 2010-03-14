@@ -31,6 +31,13 @@ namespace :deploy do
     end
   end
 
+  desc "Install daemontools scripts in service/ to /etc/service/ and start all services"
+  namespace :daemons do
+    task :install do
+      run "#{sudo} cp -R #{current_path}/config/service/* /etc/service/"
+    end
+  end
+
   desc "Update the crontab file"
   task :update_crontab do
     run "cd #{release_path} && /opt/ruby-enterprise-*/bin/whenever --update-crontab #{application}"
