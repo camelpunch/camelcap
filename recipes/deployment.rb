@@ -31,6 +31,11 @@ namespace :deploy do
     end
   end
 
+  desc "Update the crontab file"
+  task :update_crontab do
+    run "cd #{release_path} && /opt/ruby-enterprise-1.8.7-2010.01/bin/whenever --update-crontab #{application}"
+  end
+
   task :fix_setup_permissions do
     run "#{sudo} chown ubuntu.ubuntu #{deploy_to} #{deploy_to}/*"
   end
