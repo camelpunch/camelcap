@@ -38,6 +38,13 @@ namespace :deploy do
     end
   end
 
+  desc "Rebuild ferret index"
+  namespace :ferret do
+    task :rebuild_index do
+      run "/opt/ruby-enterprise-*/bin/ruby #{current_path}/script/runner -e #{rails_env} Design.rebuild_index"
+    end
+  end
+
   desc "Update the crontab file"
   task :update_crontab do
     run "cd #{release_path} && /opt/ruby-enterprise-*/bin/whenever --update-crontab #{application}"
