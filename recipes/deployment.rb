@@ -80,5 +80,7 @@ after "deploy:web:disable", "deploy:apache:reload"
 
 after "deploy:setup", "deploy:fix_setup_permissions"
 after "deploy", "deploy:copy_sites_available"
+after "deploy:cold", "deploy:copy_sites_available"
 after "deploy", "deploy:touch_and_permit_log_files"
+before "deploy:migrate", "deploy:touch_and_permit_log_files"
 
