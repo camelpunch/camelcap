@@ -15,6 +15,14 @@ task :build_gems do
 end
 
 namespace :deploy do
+  task :build_assets do
+    run "cd #{release_path} && rake asset:packager:build_all RAILS_ENV=#{rails_env}"
+  end
+
+  task :upload_assets do
+    run "/opt/ruby-enterprise-*/bin/ruby #{release_path}/script/runner -e #{rails_env} 'CloudfrontAssetHost::Uploader.upload!(:verbose => true, :dryrun => false)'"
+  end
+
   namespace :apache do
     task :reload do
       run "#{sudo} service apache2 reload"
