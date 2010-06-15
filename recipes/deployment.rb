@@ -20,7 +20,7 @@ namespace :deploy do
   end
 
   task :upload_assets do
-    run "/opt/ruby-enterprise-*/bin/ruby #{release_path}/script/runner -e #{rails_env} 'CloudfrontAssetHost::Uploader.upload!(:verbose => true, :dryrun => false)'"
+    run "ruby #{release_path}/script/runner -e #{rails_env} 'CloudfrontAssetHost::Uploader.upload!(:verbose => true, :dryrun => false)'"
   end
 
   namespace :apache do
@@ -49,13 +49,13 @@ namespace :deploy do
   desc "Rebuild ferret index"
   namespace :ferret do
     task :rebuild_index do
-      run "/opt/ruby-enterprise-*/bin/ruby #{current_path}/script/runner -e #{rails_env} Design.rebuild_index"
+      run "ruby #{current_path}/script/runner -e #{rails_env} Design.rebuild_index"
     end
   end
 
   desc "Update the crontab file"
   task :update_crontab do
-    run "cd #{release_path} && /opt/ruby-enterprise-*/bin/whenever --update-crontab #{application}"
+    run "cd #{release_path} && whenever --update-crontab #{application}"
   end
 
   task :fix_setup_permissions do
@@ -89,6 +89,6 @@ after "deploy:web:disable", "deploy:apache:reload"
 after "deploy:setup", "deploy:fix_setup_permissions"
 after "deploy", "deploy:copy_sites_available"
 after "deploy:cold", "deploy:copy_sites_available"
-after "deploy", "deploy:touch_and_permit_log_files"
+before "deploy:symlink", "deploy:touch_and_permit_log_files"
 before "deploy:migrate", "deploy:touch_and_permit_log_files"
 
